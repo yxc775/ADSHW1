@@ -2,6 +2,7 @@ public class BuildingInfo {
     private int buildingNum;
     private int executed_time;
     private int total_time;
+    public RBNode point;
 
     public BuildingInfo(int b, int e, int t){
         buildingNum = b;

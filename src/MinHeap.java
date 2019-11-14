@@ -1,4 +1,3 @@
-import javax.swing.plaf.ButtonUI;
 
 public class MinHeap {
     private BuildingInfo[] heap = new BuildingInfo[2000];
@@ -58,11 +57,39 @@ public class MinHeap {
                     minheapify(rightsub(pos));
                 }
             }
+            else{
+                if((heap[pos].getE() == heap[leftsub(pos)].getE())&&(heap[pos].getE() == heap[rightsub(pos)].getE())) {
+                    if ((heap[pos].getB() > heap[leftsub(pos)].getB()) || (heap[pos].getB() > heap[rightsub(pos)].getB())) {
+                        if (heap[leftsub(pos)].getB() < heap[rightsub(pos)].getB()) {
+                            swap(pos, leftsub(pos));
+                            minheapify(leftsub(pos));
+                        } else {
+                            swap(pos, rightsub(pos));
+                            minheapify(rightsub(pos));
+                        }
+                    }
+                }
+                else if(heap[pos].getE() == heap[leftsub(pos)].getE()){
+                   if(heap[pos].getB() > heap[leftsub(pos)].getB()){
+                       swap(pos, leftsub(pos));
+                       minheapify(leftsub(pos));
+                   }
+                }
+                else if(heap[pos].getE() == heap[rightsub(pos)].getE()){
+                    if(heap[pos].getB() > heap[rightsub(pos)].getB()){
+                        swap(pos, rightsub(pos));
+                        minheapify(rightsub(pos));
+                    }
+                }
+                else{
+
+                }
+            }
         }
     }
 
-    private void insert(BuildingInfo element){
-        if(size >= maxsize){
+    private void insert(BuildingInfo element) {
+        if (size >= maxsize) {
             System.out.println("full!");
             return;
         }
@@ -70,9 +97,20 @@ public class MinHeap {
         size += 1;
         heap[size] = element;
         int cur = size;
-        while(heap[cur].getE() < heap[parent(cur)].getE()){
-            swap(cur,parent(cur));
-            cur = parent(cur);
+        while (heap[cur].getE() <= heap[parent(cur)].getE()) {
+            if(heap[cur].getE() < heap[parent(cur)].getE()) {
+                swap(cur, parent(cur));
+                cur = parent(cur);
+            }
+            else{
+                if(heap[cur].getB() < heap[parent(cur)].getB()){
+                    swap(cur, parent(cur));
+                    cur = parent(cur);
+                }
+                else{
+                    break;
+                }
+            }
         }
     }
 
@@ -83,6 +121,11 @@ public class MinHeap {
                     + "l： " + heap[2 * i]
                     + "r: " + heap[2 * i + 1]);
         }
+    }
+
+    public void update(int execute){
+        BuildingInfo top = heap[1];
+        top.setE(top.getE() + execute);
     }
 
     public BuildingInfo pop(){
