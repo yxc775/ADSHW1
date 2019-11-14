@@ -8,6 +8,8 @@ public class RBTree {
         root = null;
     }
 
+
+
     public void insert(RBNode x){
         if(root == null){
             x.isRed = false;
@@ -120,17 +122,14 @@ public class RBTree {
             newparent.right = node;
         }
     }
-    private void swapRBNode(RBNode a, RBNode b){
+    private void swapBuildingInfo(RBNode a, RBNode b){
+        BuildingInfo builda = a.keystruct;
+        BuildingInfo buildb = b.keystruct;
         BuildingInfo tempa = new BuildingInfo(a.keystruct.getB(),a.keystruct.getE(),a.keystruct.getT());
-        RBNode temppoint = new RBNode(new BuildingInfo(a.keystruct.getB(),a.keystruct.getE(),a.keystruct.getT()));
-        temppoint.parent = a.parent;
-        temppoint.left = a.left;
-        temppoint.right = a.right;
-        temppoint.isRed = a.isRed;
-        a.keystruct.point = b.keystruct.point;
-        b.keystruct.point = temppoint;
-        a.keystruct = b.keystruct;
+        a.keystruct =  new BuildingInfo(b.keystruct.getB(),b.keystruct.getE(),b.keystruct.getT());
         b.keystruct = tempa;
+        builda.point = b;
+        buildb.point = a;
     }
 
     private void swapColor(RBNode a, RBNode b){
@@ -227,7 +226,7 @@ public class RBTree {
         }
         else if(toDelete.left == null || toDelete.right == null) {
             if (root == toDelete) {
-                toDelete.keystruct = replaceWith.keystruct;
+                toDelete.keystruct = new BuildingInfo(replaceWith.keystruct.getB(),replaceWith.keystruct.getE(),replaceWith.keystruct.getT());
                 toDelete.left = null;
                 toDelete.right = null;
             } else {
@@ -246,7 +245,7 @@ public class RBTree {
             }
         }
         else{
-            swapRBNode(replaceWith,toDelete);
+            swapBuildingInfo(replaceWith,toDelete);
             deleteRBNode(replaceWith);
         }
     }
@@ -309,4 +308,43 @@ public class RBTree {
         }
     }
 
+    public static  void main(String[] args){
+        RBTree tree = new RBTree();
+        BuildingInfo todelete18 = new BuildingInfo(18,0,0);
+        BuildingInfo todelete11 = new BuildingInfo(11,0,0);
+        BuildingInfo todelete3 = new BuildingInfo(3,0,0);
+        BuildingInfo todelete10 =new BuildingInfo(10,0,0);
+        BuildingInfo todelete22 = new BuildingInfo(22,0,0);
+
+        todelete18.point = new RBNode(todelete18);
+        todelete11.point = new RBNode(todelete11);
+        todelete3.point = new RBNode(todelete3);
+        todelete10.point = new RBNode(todelete10);
+        todelete22.point = new RBNode(todelete22);
+
+        tree.insert(new RBNode(new BuildingInfo(7,0,0)));
+        tree.insert(todelete3.point);
+        tree.insert(todelete18.point);
+        tree.insert(todelete10.point);
+        tree.insert(todelete22.point);
+        tree.insert(new RBNode(new BuildingInfo(8,0,0)));
+        tree.insert(todelete11.point);
+        tree.insert(new RBNode(new BuildingInfo(26,0,0)));
+        tree.insert(new RBNode(new BuildingInfo(2,0,0)));
+        tree.insert(new RBNode(new BuildingInfo(6,0,0)));
+        tree.insert(new RBNode(new BuildingInfo(13,0,0)));
+
+        tree.printInorder();
+        tree.printFromTopDown();
+
+        System.out.println("Deleting 18, 11, 3, 10, 22");
+         tree.deleteRBNode(todelete18.point);
+         tree.deleteRBNode(todelete11.point);
+        tree.deleteRBNode(todelete3.point);
+        tree.deleteRBNode(todelete10.point);
+        tree.deleteRBNode(todelete22.point);
+
+        tree.printInorder();
+        tree.printFromTopDown();
+    }
 }
