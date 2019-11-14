@@ -54,47 +54,6 @@ public class RBTree {
         deleteRBNode(toDelete);
     }
 
-    public void printFromTopDown(){
-        System.out.println("top to down: ");
-        if(root == null){
-            System.out.println("Empty！");
-        }
-        else{
-            Queue<RBNode> q = new LinkedList<>();
-            RBNode cur;
-            q.offer(root);
-
-            while(!q.isEmpty()){
-                cur = q.poll();
-                System.out.print(cur.keystruct.getB() + " ");
-                if(cur.left != null){
-                    q.offer(cur.left);
-                }
-                if(cur.right != null){
-                    q.offer(cur.right);
-                }
-            }
-        }
-    }
-
-    public void printInorder(){
-        System.out.println("Inorder: ");
-        if(root !=  null){
-            recursivePrintInorder(root);
-        }
-        else{
-            System.out.println("Empty!");
-        }
-    }
-
-    public void recursivePrintInorder(RBNode x){
-        if(x != null){
-            recursivePrintInorder(x.left);
-            System.out.print(x.keystruct.getB() + " ");
-            recursivePrintInorder(x.right);
-        }
-    }
-
     private void rotateto(RBNode node, boolean toLeft){
         RBNode newparent = null;
         if(toLeft){
@@ -128,6 +87,7 @@ public class RBTree {
         BuildingInfo tempa = new BuildingInfo(a.keystruct.getB(),a.keystruct.getE(),a.keystruct.getT());
         a.keystruct =  new BuildingInfo(b.keystruct.getB(),b.keystruct.getE(),b.keystruct.getT());
         b.keystruct = tempa;
+        //You have to re assign the pointers otherwise, the pointer will not follow with the updated value
         builda.point = b;
         buildb.point = a;
     }
@@ -306,45 +266,5 @@ public class RBTree {
                 }
             }
         }
-    }
-
-    public static  void main(String[] args){
-        RBTree tree = new RBTree();
-        BuildingInfo todelete18 = new BuildingInfo(18,0,0);
-        BuildingInfo todelete11 = new BuildingInfo(11,0,0);
-        BuildingInfo todelete3 = new BuildingInfo(3,0,0);
-        BuildingInfo todelete10 =new BuildingInfo(10,0,0);
-        BuildingInfo todelete22 = new BuildingInfo(22,0,0);
-
-        todelete18.point = new RBNode(todelete18);
-        todelete11.point = new RBNode(todelete11);
-        todelete3.point = new RBNode(todelete3);
-        todelete10.point = new RBNode(todelete10);
-        todelete22.point = new RBNode(todelete22);
-
-        tree.insert(new RBNode(new BuildingInfo(7,0,0)));
-        tree.insert(todelete3.point);
-        tree.insert(todelete18.point);
-        tree.insert(todelete10.point);
-        tree.insert(todelete22.point);
-        tree.insert(new RBNode(new BuildingInfo(8,0,0)));
-        tree.insert(todelete11.point);
-        tree.insert(new RBNode(new BuildingInfo(26,0,0)));
-        tree.insert(new RBNode(new BuildingInfo(2,0,0)));
-        tree.insert(new RBNode(new BuildingInfo(6,0,0)));
-        tree.insert(new RBNode(new BuildingInfo(13,0,0)));
-
-        tree.printInorder();
-        tree.printFromTopDown();
-
-        System.out.println("Deleting 18, 11, 3, 10, 22");
-         tree.deleteRBNode(todelete18.point);
-         tree.deleteRBNode(todelete11.point);
-        tree.deleteRBNode(todelete3.point);
-        tree.deleteRBNode(todelete10.point);
-        tree.deleteRBNode(todelete22.point);
-
-        tree.printInorder();
-        tree.printFromTopDown();
     }
 }
