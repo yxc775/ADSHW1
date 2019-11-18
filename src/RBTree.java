@@ -1,15 +1,13 @@
-import java.util.LinkedList;
-import java.util.Queue;
-
 public class RBTree {
-    RBNode root;
+    private RBNode root;
+
 
     public RBTree(){
         root = null;
     }
-
-
-
+    public RBNode getRoot(){
+        return  root;
+    }
     public void insert(RBNode x){
         if(root == null){
             x.isRed = false;
@@ -18,7 +16,7 @@ public class RBTree {
         else{
             RBNode parent = root;
             while(parent != null){
-                if(x.keystruct.getB() < parent.keystruct.getB()){
+                if(x.getB() < parent.getB()){
                     if(parent.left == null){
                         break;
                     }
@@ -26,7 +24,7 @@ public class RBTree {
                         parent = parent.left;
                     }
                 }
-                else if(x.keystruct.getB() == parent.keystruct.getB()){
+                else if(x.getB() == parent.getB()){
                     System.out.println("Duplicate Building Number Encountered!");
                     return;
                 }
@@ -40,7 +38,7 @@ public class RBTree {
                 }
             }
             x.parent = parent;
-            if(x.keystruct.getB() < parent.keystruct.getB()){
+            if(x.getB() < parent.getB()){
                 parent.left = x;
             }
             else{
@@ -54,6 +52,50 @@ public class RBTree {
         deleteRBNode(toDelete);
     }
 
+    public RBNode search(RBNode cur, int buildingNumber){
+        if(cur == null){
+            return null;
+        }
+        else if(cur.getB() == buildingNumber){
+            return cur;
+        }
+        else{
+            if(cur.getB() > buildingNumber){
+                return search(cur.left,buildingNumber);
+            }
+            else{
+                return search(cur.right,buildingNumber);
+            }
+        }
+    }
+
+    public String searchBetween(RBNode cur,int left, int right){
+        if(cur == null){
+            return "";
+        }
+        else if(cur.getB()> right || cur.getT() < left){
+            if(cur.getB() > right){
+                return searchBetween(cur.left,left,right);
+            }
+            else {
+                return searchBetween(cur.right,left,right);
+            }
+        }
+        else{
+            StringBuilder content = new StringBuilder();
+            String leftbuild = searchBetween(cur.left,left,right);
+            if(!leftbuild.isEmpty()) {
+                content.append(leftbuild);
+            }
+            content.append("("+cur.getB() + "," + cur.getE() + "," + cur.getT()+")" +",");
+            String rightbuild = searchBetween(cur.right,left,right);
+            if(!rightbuild.isEmpty()){
+                content.append(rightbuild);
+            }
+
+            return content.toString();
+        }
+    }
     private void rotateto(RBNode node, boolean toLeft){
         RBNode newparent = null;
         if(toLeft){
@@ -84,9 +126,15 @@ public class RBTree {
     private void swapBuildingInfo(RBNode a, RBNode b){
         BuildingInfo builda = a.keystruct;
         BuildingInfo buildb = b.keystruct;
-        BuildingInfo tempa = new BuildingInfo(a.keystruct.getB(),a.keystruct.getE(),a.keystruct.getT());
-        a.keystruct =  new BuildingInfo(b.keystruct.getB(),b.keystruct.getE(),b.keystruct.getT());
-        b.keystruct = tempa;
+        int tempbuildingnum = a.getB();
+        int tempexe = a.getE();
+        int temptotal = a.getT();
+        a.setB(b.getB());
+        a.setE(b.getE());
+        a.setT(b.getT());
+        b.setB(tempbuildingnum);
+        b.setE(tempexe);
+        b.setT(temptotal);
         //You have to re assign the pointers otherwise, the pointer will not follow with the updated value
         builda.point = b;
         buildb.point = a;
@@ -186,7 +234,9 @@ public class RBTree {
         }
         else if(toDelete.left == null || toDelete.right == null) {
             if (root == toDelete) {
-                toDelete.keystruct = new BuildingInfo(replaceWith.keystruct.getB(),replaceWith.keystruct.getE(),replaceWith.keystruct.getT());
+                toDelete.setB(replaceWith.getB());
+                toDelete.setE(replaceWith.getE());
+                toDelete.setT(replaceWith.getT());
                 toDelete.left = null;
                 toDelete.right = null;
             } else {
@@ -265,6 +315,9 @@ public class RBTree {
                     }
                 }
             }
+        }
+        else{
+            return;
         }
     }
 }

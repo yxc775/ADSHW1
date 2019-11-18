@@ -6,7 +6,11 @@
 	set CLASSPATH=%CLASSPATH%
 
 CLASSES = \
-	risingCity.java
+	BuildingInfo.java \
+	MinHeap.java \
+    RBNode.java \
+    RBTree.java \
+    risingCity.java
 default: classes
 
 classes: $(CLASSES:.java=.class)

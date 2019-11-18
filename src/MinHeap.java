@@ -5,90 +5,11 @@ public class MinHeap {
     private int maxsize = 2000;
 
     public MinHeap(){
-        BuildingInfo dummy = new BuildingInfo(0,Integer.MIN_VALUE,0);
+        BuildingInfo dummy = new BuildingInfo(-5,-5,-5);
         heap[0] = dummy;
     }
 
-    private int parent(int pos){
-        return pos/2;
-    }
-
-    private int leftsub(int pos){
-        return 2 * pos;
-    }
-
-    private int rightsub(int pos){
-        return 2 * pos + 1;
-    }
-
-    private boolean isLeaf(int pos){
-        if((pos >= size/2) && (pos <= size)){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-
-    private void swap(int first, int second){
-        BuildingInfo tmp1 = new BuildingInfo(0,0,0);
-        tmp1.setB(heap[first].getB());
-        tmp1.setE(heap[first].getE());
-        tmp1.setT(heap[first].getT());
-
-        BuildingInfo tmp2 = new BuildingInfo(0,0,0);
-        tmp2.setB(heap[second].getB());
-        tmp2.setE(heap[second].getE());
-        tmp2.setT(heap[second].getT());
-
-        heap[first] = tmp2;
-        heap[second] = tmp1;
-    }
-
-    private void minheapify(int pos){
-        if(!isLeaf(pos)){
-            if((heap[pos].getE() > heap[leftsub(pos)].getE())||(heap[pos].getE() > heap[rightsub(pos)].getE())){
-                if(heap[leftsub(pos)].getE() < heap[rightsub(pos)].getE()){
-                    swap(pos,leftsub(pos));
-                    minheapify(leftsub(pos));
-                }
-                else{
-                    swap(pos,rightsub(pos));
-                    minheapify(rightsub(pos));
-                }
-            }
-            else{
-                if((heap[pos].getE() == heap[leftsub(pos)].getE())&&(heap[pos].getE() == heap[rightsub(pos)].getE())) {
-                    if ((heap[pos].getB() > heap[leftsub(pos)].getB()) || (heap[pos].getB() > heap[rightsub(pos)].getB())) {
-                        if (heap[leftsub(pos)].getB() < heap[rightsub(pos)].getB()) {
-                            swap(pos, leftsub(pos));
-                            minheapify(leftsub(pos));
-                        } else {
-                            swap(pos, rightsub(pos));
-                            minheapify(rightsub(pos));
-                        }
-                    }
-                }
-                else if(heap[pos].getE() == heap[leftsub(pos)].getE()){
-                   if(heap[pos].getB() > heap[leftsub(pos)].getB()){
-                       swap(pos, leftsub(pos));
-                       minheapify(leftsub(pos));
-                   }
-                }
-                else if(heap[pos].getE() == heap[rightsub(pos)].getE()){
-                    if(heap[pos].getB() > heap[rightsub(pos)].getB()){
-                        swap(pos, rightsub(pos));
-                        minheapify(rightsub(pos));
-                    }
-                }
-                else{
-
-                }
-            }
-        }
-    }
-
-    private void insert(BuildingInfo element) {
+    public void insert(BuildingInfo element) {
         if (size >= maxsize) {
             System.out.println("full!");
             return;
@@ -114,26 +35,154 @@ public class MinHeap {
         }
     }
 
-    public void print()
-    {
-        for (int i = 1; i <= size / 2; i++) {
-            System.out.println("p: " + heap[i]
-                    + "l： " + heap[2 * i]
-                    + "r: " + heap[2 * i + 1]);
+    public void update(int execute){
+        BuildingInfo top = heap[1];
+        if(top.getE() >= 0) {
+            top.setE(top.getE() + execute);
+            top.point.setE(top.point.getE() + execute);
+            minheapify(1);
         }
     }
 
-    public void update(int execute){
-        BuildingInfo top = heap[1];
-        top.setE(top.getE() + execute);
-    }
-
     public BuildingInfo pop(){
-        BuildingInfo poped = heap[1];
-        heap[1] = heap[size];
-        size--;
-        minheapify(1);
-        return poped;
+        if(size > 1) {
+            BuildingInfo poped = heap[1];
+            heap[1] = heap[size];
+            heap[size] = null;
+            size--;
+            minheapify(1);
+            return poped;
+        }
+        else if(size == 1){
+            BuildingInfo poped = heap[1];
+            heap[1] = null;
+            size--;
+            return poped;
+        }
+        else{
+            return null;
+        }
     }
 
+    public BuildingInfo peek(){
+        if(size >= 1) {
+            return heap[1];
+        }
+        else{
+            return null;
+        }
+    }
+
+    private int parent(int pos){
+        return pos/2;
+    }
+
+    private int leftsub(int pos){
+        return 2 * pos;
+    }
+
+    private int rightsub(int pos){
+        return 2 * pos + 1;
+    }
+
+    private boolean isLeaf(int pos){
+        if(pos * 2 < heap.length){
+            if(heap[pos * 2] != null){
+                return false;
+            }
+        }
+
+        if(pos * 2+ 1 < heap.length){
+            if(heap[pos * 2+1] != null){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void swap(int first, int second){
+        RBNode pointtofirst = heap[first].point;
+        RBNode pointtoSecond = heap[second].point;
+
+        BuildingInfo tmp1 = new BuildingInfo(0,0,0);
+        tmp1.setB(heap[first].getB());
+        tmp1.setE(heap[first].getE());
+        tmp1.setT(heap[first].getT());
+        tmp1.point = pointtofirst;
+
+        BuildingInfo tmp2 = new BuildingInfo(0,0,0);
+        tmp2.setB(heap[second].getB());
+        tmp2.setE(heap[second].getE());
+        tmp2.setT(heap[second].getT());
+        tmp2.point = pointtoSecond;
+
+        heap[first] = tmp2;
+        heap[second] = tmp1;
+    }
+
+
+
+    private void minheapify(int pos){
+        if(!isLeaf(pos)){
+            if(heap[leftsub(pos)] != null && heap[rightsub(pos)] != null) {
+                if ((heap[pos].getE() > heap[leftsub(pos)].getE()) || (heap[pos].getE() > heap[rightsub(pos)].getE())) {
+                    if (heap[leftsub(pos)].getE() < heap[rightsub(pos)].getE()) {
+                        swap(pos, leftsub(pos));
+                        minheapify(leftsub(pos));
+                    } else {
+                        swap(pos, rightsub(pos));
+                        minheapify(rightsub(pos));
+                    }
+                } else {
+                    if ((heap[pos].getE() == heap[leftsub(pos)].getE()) && (heap[pos].getE() == heap[rightsub(pos)].getE())) {
+                        if ((heap[pos].getB() > heap[leftsub(pos)].getB()) || (heap[pos].getB() > heap[rightsub(pos)].getB())) {
+                            if (heap[leftsub(pos)].getB() < heap[rightsub(pos)].getB()) {
+                                swap(pos, leftsub(pos));
+                                minheapify(leftsub(pos));
+                            } else {
+                                swap(pos, rightsub(pos));
+                                minheapify(rightsub(pos));
+                            }
+                        }
+                    } else if (heap[pos].getE() == heap[leftsub(pos)].getE()) {
+                        if (heap[pos].getB() > heap[leftsub(pos)].getB()) {
+                            swap(pos, leftsub(pos));
+                            minheapify(leftsub(pos));
+                        }
+                    } else if (heap[pos].getE() == heap[rightsub(pos)].getE()) {
+                        if (heap[pos].getB() > heap[rightsub(pos)].getB()) {
+                            swap(pos, rightsub(pos));
+                            minheapify(rightsub(pos));
+                        }
+                    }
+                }
+            }
+            else if(heap[leftsub(pos)] != null){
+                if ((heap[pos].getE() > heap[leftsub(pos)].getE())){
+                        swap(pos, leftsub(pos));
+                        minheapify(leftsub(pos));
+                } else {
+                    if (heap[pos].getE() == heap[leftsub(pos)].getE()) {
+                        if (heap[pos].getB() > heap[leftsub(pos)].getB()) {
+                            swap(pos, leftsub(pos));
+                            minheapify(leftsub(pos));
+                        }
+                    }
+                }
+            }
+            else{
+                if ((heap[pos].getE() > heap[rightsub(pos)].getE())){
+                    swap(pos, rightsub(pos));
+                    minheapify(rightsub(pos));
+                } else {
+                    if (heap[pos].getE() == heap[rightsub(pos)].getE()) {
+                        if (heap[pos].getB() > heap[rightsub(pos)].getB()) {
+                            swap(pos, rightsub(pos));
+                            minheapify(rightsub(pos));
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

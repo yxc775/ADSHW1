@@ -1,16 +1,47 @@
 public class RBNode {
-        public BuildingInfo keystruct;
+        BuildingInfo keystruct;
+        int buildingnum;
+        int exetime;
+        int totaltime;
         boolean isRed;
         RBNode left;
         RBNode right;
         RBNode parent;
         public RBNode(BuildingInfo newone){
             keystruct = newone;
+            buildingnum = newone.getB();
+            exetime = newone.getE();
+            totaltime = newone.getT();
+            newone.point = this;
             isRed = true;
             left = null;
             right = null;
             parent = null;
         }
+
+        public int getB(){
+            return buildingnum;
+        }
+
+        public void setB(int newB){
+            buildingnum = newB;
+        }
+
+    public int getE(){
+        return exetime;
+    }
+
+    public void setE(int newE){
+            exetime =  newE;
+    }
+
+    public int getT(){
+            return totaltime;
+    }
+
+    public void setT(int newT){
+            totaltime = newT;
+    }
 
         public RBNode getParentBroth(){
             if(parent == null || parent.parent == null){
