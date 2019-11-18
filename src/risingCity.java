@@ -54,9 +54,9 @@ public class risingCity {
                         cumulativeincrement += 1;
                         BuildingInfo mayUpdate = interpretor.minheap.peek();
                         if (mayUpdate.getE() + cumulativeincrement >= mayUpdate.getT()) {
+                            res.append("(" + mayUpdate.getB() +"," +globalCounter + ")" + "\n");
                             interpretor.minheap.pop();
                             interpretor.rbTree.delete(mayUpdate.point);
-                            res.append("(" + mayUpdate.getB() +"," +globalCounter + ")" + "\n");
                             cumulativeincrement = 0;
                         }
                         else if(cumulativeincrement >= 5){
