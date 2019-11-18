@@ -49,6 +49,7 @@ public class risingCity {
                 String[] command = line.split(":");
                 //do something here
                 while(Integer.parseInt(command[0]) > globalCounter){
+                    globalCounter += 1;
                     if(interpretor.minheap.peek()!= null){
                         cumulativeincrement += 1;
                         BuildingInfo mayUpdate = interpretor.minheap.peek();
@@ -63,7 +64,6 @@ public class risingCity {
                             cumulativeincrement = 0;
                         }
                     }
-                    globalCounter += 1;
                 }
                 String[] inputs = command[1].trim().replaceAll("[()]", " ").split(" ");
                 switch(inputs[0]){
@@ -88,12 +88,13 @@ public class risingCity {
             }
 
             while(interpretor.minheap.peek() != null){
-                cumulativeincrement += 1;
                 BuildingInfo mayUpdate = interpretor.minheap.peek();
+                cumulativeincrement += 1;
+                globalCounter += 1;
                 if (mayUpdate.getE() + cumulativeincrement >= mayUpdate.getT()) {
                     mayUpdate.point.getB();
                     interpretor.rbTree.delete(mayUpdate.point);
-                    res.append("(" + mayUpdate.getB() +"," +(globalCounter + 1) + ")" + "\n");
+                    res.append("(" + mayUpdate.getB() +"," +globalCounter+ ")" + "\n");
                     interpretor.minheap.pop();
                     cumulativeincrement = 0;
                 }
@@ -104,7 +105,6 @@ public class risingCity {
                 else{
 
                 }
-                globalCounter += 1;
             }
 
 

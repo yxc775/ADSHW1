@@ -57,6 +57,7 @@ public class MinHeap {
             BuildingInfo poped = heap[1];
             heap[1] = null;
             size--;
+            System.out.println(poped);
             return poped;
         }
         else{

@@ -82,28 +82,21 @@ public class RBTree {
         if(cur == null){
             return "";
         }
-        else if(cur.getB()> right || cur.getT() < left){
-            if(cur.getB() > right){
-                return searchBetween(cur.left,left,right);
-            }
-            else {
-                return searchBetween(cur.right,left,right);
-            }
-        }
-        else{
-            StringBuilder content = new StringBuilder();
-            String leftbuild = searchBetween(cur.left,left,right);
-            if(!leftbuild.isEmpty()) {
-                content.append(leftbuild);
-            }
-            content.append("("+cur.getB() + "," + cur.getE() + "," + cur.getT()+")" +",");
-            String rightbuild = searchBetween(cur.right,left,right);
-            if(!rightbuild.isEmpty()){
-                content.append(rightbuild);
-            }
+        StringBuilder content = new StringBuilder();
 
-            return content.toString();
+        if(left < cur.getB()){
+            content.append(searchBetween(cur.left,left,right));
         }
+
+        if(left <= cur.getB() && right >= cur.getB()){
+            content.append("(" +cur.getB() + "," + cur.getE() + "," + cur.getT() + ")" + ",");
+        }
+
+        if(right > cur.getB()){
+            content.append(searchBetween(cur.right,left,right));
+        }
+
+        return content.toString();
     }
 
     private void rotateto(RBNode node, boolean toLeft){
