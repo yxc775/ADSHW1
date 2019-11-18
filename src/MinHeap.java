@@ -57,7 +57,6 @@ public class MinHeap {
             BuildingInfo poped = heap[1];
             heap[1] = null;
             size--;
-            System.out.println(poped);
             return poped;
         }
         else{
@@ -87,18 +86,15 @@ public class MinHeap {
     }
 
     private boolean isLeaf(int pos){
-        if(pos * 2 < heap.length){
-            if(heap[pos * 2] != null){
-                return false;
-            }
-        }
+     if(heap[pos * 2] != null){
+         return false;
+      }
 
-        if(pos * 2+ 1 < heap.length){
-            if(heap[pos * 2+1] != null){
-                return false;
-            }
-        }
-        return true;
+      if(heap[pos * 2+1] != null){
+         return false;
+      }
+
+      return true;
     }
 
     private void swap(int first, int second){
@@ -127,7 +123,6 @@ public class MinHeap {
     }
 
 
-
     private void minheapify(int pos){
         if(!isLeaf(pos)){
             if(heap[leftsub(pos)] != null && heap[rightsub(pos)] != null) {
@@ -141,7 +136,6 @@ public class MinHeap {
                     }
                 } else {
                     if ((heap[pos].getE() == heap[leftsub(pos)].getE()) && (heap[pos].getE() == heap[rightsub(pos)].getE())) {
-                        if ((heap[pos].getB() > heap[leftsub(pos)].getB()) || (heap[pos].getB() > heap[rightsub(pos)].getB())) {
                             if (heap[leftsub(pos)].getB() < heap[rightsub(pos)].getB()) {
                                 swap(pos, leftsub(pos));
                                 minheapify(leftsub(pos));
@@ -149,7 +143,6 @@ public class MinHeap {
                                 swap(pos, rightsub(pos));
                                 minheapify(rightsub(pos));
                             }
-                        }
                     } else if (heap[pos].getE() == heap[leftsub(pos)].getE()) {
                         if (heap[pos].getB() > heap[leftsub(pos)].getB()) {
                             swap(pos, leftsub(pos));

@@ -59,7 +59,7 @@ public class risingCity {
                             res.append("(" + mayUpdate.getB() +"," +globalCounter + ")" + "\n");
                             cumulativeincrement = 0;
                         }
-                        if(cumulativeincrement >= 5){
+                        else if(cumulativeincrement >= 5){
                             interpretor.minheap.update(5);
                             cumulativeincrement = 0;
                         }
@@ -92,18 +92,14 @@ public class risingCity {
                 cumulativeincrement += 1;
                 globalCounter += 1;
                 if (mayUpdate.getE() + cumulativeincrement >= mayUpdate.getT()) {
-                    mayUpdate.point.getB();
-                    interpretor.rbTree.delete(mayUpdate.point);
                     res.append("(" + mayUpdate.getB() +"," +globalCounter+ ")" + "\n");
+                    interpretor.rbTree.delete(mayUpdate.point);
                     interpretor.minheap.pop();
                     cumulativeincrement = 0;
                 }
                 else if(cumulativeincrement >= 5){
                     interpretor.minheap.update(5);
                     cumulativeincrement = 0;
-                }
-                else{
-
                 }
             }
 
@@ -117,7 +113,6 @@ public class risingCity {
         catch(Exception e){
             e.printStackTrace();
         }
-
     }
 
 }
