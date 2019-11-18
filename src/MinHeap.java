@@ -86,15 +86,7 @@ public class MinHeap {
     }
 
     private boolean isLeaf(int pos){
-     if(heap[pos * 2] != null){
-         return false;
-      }
-
-      if(heap[pos * 2+1] != null){
-         return false;
-      }
-
-      return true;
+        return (heap[pos * 2] == null && heap[pos * 2+1] == null);
     }
 
     private void swap(int first, int second){
