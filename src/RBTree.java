@@ -1,3 +1,6 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class RBTree {
     private RBNode root;
 
@@ -48,8 +51,14 @@ public class RBTree {
         }
     }
 
-    public void delete(RBNode toDelete){
-        deleteRBNode(toDelete);
+    public void delete(RBNode b){
+        //System.out.println("node from point " + b.getB());
+        if(root == null){
+            return;
+        }
+        RBNode todelete = b;
+
+        deleteRBNode(todelete);
     }
 
     public RBNode search(RBNode cur, int buildingNumber){
@@ -96,20 +105,24 @@ public class RBTree {
             return content.toString();
         }
     }
+
     private void rotateto(RBNode node, boolean toLeft){
         RBNode newparent = null;
+
         if(toLeft){
             newparent = node.right;
         }
         else{
             newparent = node.left;
         }
+
         if(root == node){
             root = newparent;
         }
         node.replaceWiththis(newparent);
         if(toLeft) {
             node.right = newparent.left;
+
             if(newparent.left != null){
                 newparent.left.parent = node;
             }
@@ -138,6 +151,8 @@ public class RBTree {
         //You have to re assign the pointers otherwise, the pointer will not follow with the updated value
         builda.point = b;
         buildb.point = a;
+        b.keystruct = builda;
+        a.keystruct = buildb;
     }
 
     private void swapColor(RBNode a, RBNode b){
@@ -176,8 +191,8 @@ public class RBTree {
                     }
                     else{
                         if(dr.isLeftchild()){
-                         rotateto(parent,false);
-                         swapColor(dr,parentsparent);
+                            rotateto(parent,false);
+                            swapColor(dr,parentsparent);
                         }
                         else{
                             swapColor(parent,parentsparent);
@@ -212,9 +227,11 @@ public class RBTree {
         }
     }
 
+
+
     private void deleteRBNode(RBNode toDelete){
         RBNode replaceWith = getFillInAfterDelete(toDelete);
-        RBNode parent = toDelete.parent;
+        RBNode curparent = toDelete.parent;
         if(replaceWith == null){
             if(root == toDelete){
                 root = null;
@@ -225,28 +242,32 @@ public class RBTree {
                 }
 
                 if(toDelete.isLeftchild()){
-                    parent.left = null;
+                    curparent.left = null;
                 }
                 else{
-                    parent.right = null;
+                    curparent.right = null;
                 }
             }
         }
         else if(toDelete.left == null || toDelete.right == null) {
             if (root == toDelete) {
+                BuildingInfo replpoint = replaceWith.keystruct;
                 toDelete.setB(replaceWith.getB());
                 toDelete.setE(replaceWith.getE());
                 toDelete.setT(replaceWith.getT());
                 toDelete.left = null;
                 toDelete.right = null;
+                replpoint.point = toDelete;
+                toDelete.keystruct = replpoint;
             } else {
                 if (toDelete.isLeftchild()) {
-                    parent.left = replaceWith;
+                    curparent.left = replaceWith;
                 } else {
-                    parent.right = replaceWith;
+                    curparent.right = replaceWith;
                 }
 
-                replaceWith.parent = parent;
+                replaceWith.parent = curparent;
+
                 if ((replaceWith == null || !replaceWith.isRed)  && !toDelete.isRed) {
                     balanceDoubleBlackAt(replaceWith);
                 } else {

@@ -108,14 +108,19 @@ public class MinHeap {
         tmp1.setB(heap[first].getB());
         tmp1.setE(heap[first].getE());
         tmp1.setT(heap[first].getT());
+        //reestablish pointers.
         tmp1.point = pointtofirst;
+        pointtofirst.keystruct = tmp1;
 
         BuildingInfo tmp2 = new BuildingInfo(0,0,0);
         tmp2.setB(heap[second].getB());
         tmp2.setE(heap[second].getE());
         tmp2.setT(heap[second].getT());
+        //reestablish pointers
         tmp2.point = pointtoSecond;
+        pointtoSecond.keystruct = tmp2;
 
+        //finally switch these two nodes.
         heap[first] = tmp2;
         heap[second] = tmp1;
     }

@@ -53,9 +53,9 @@ public class risingCity {
                         cumulativeincrement += 1;
                         BuildingInfo mayUpdate = interpretor.minheap.peek();
                         if (mayUpdate.getE() + cumulativeincrement >= mayUpdate.getT()) {
+                            interpretor.minheap.pop();
                             interpretor.rbTree.delete(mayUpdate.point);
                             res.append("(" + mayUpdate.getB() +"," +globalCounter + ")" + "\n");
-                            interpretor.minheap.pop();
                             cumulativeincrement = 0;
                         }
                         if(cumulativeincrement >= 5){
@@ -65,7 +65,6 @@ public class risingCity {
                     }
                     globalCounter += 1;
                 }
-                System.out.println(Integer.parseInt(command[0]));
                 String[] inputs = command[1].trim().replaceAll("[()]", " ").split(" ");
                 switch(inputs[0]){
                     case "Insert":
@@ -92,6 +91,7 @@ public class risingCity {
                 cumulativeincrement += 1;
                 BuildingInfo mayUpdate = interpretor.minheap.peek();
                 if (mayUpdate.getE() + cumulativeincrement >= mayUpdate.getT()) {
+                    mayUpdate.point.getB();
                     interpretor.rbTree.delete(mayUpdate.point);
                     res.append("(" + mayUpdate.getB() +"," +(globalCounter + 1) + ")" + "\n");
                     interpretor.minheap.pop();
@@ -119,4 +119,5 @@ public class risingCity {
         }
 
     }
+
 }
