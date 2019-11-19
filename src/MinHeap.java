@@ -18,18 +18,18 @@ public class MinHeap {
         size += 1;
         heap[size] = element;
         int cur = size;
-        while (heap[cur].getE() <= heap[parent(cur)].getE()) {
-            if(heap[cur].getE() < heap[parent(cur)].getE()) {
-                swap(cur, parent(cur));
-                cur = parent(cur);
-            }
-            else{
-                if(heap[cur].getB() < heap[parent(cur)].getB()){
+        if(size > 1) {
+            while (heap[cur].getE() <= heap[parent(cur)].getE()) {
+                if (heap[cur].getE() < heap[parent(cur)].getE()) {
                     swap(cur, parent(cur));
                     cur = parent(cur);
-                }
-                else{
-                    break;
+                } else {
+                    if (heap[cur].getB() < heap[parent(cur)].getB()) {
+                        swap(cur, parent(cur));
+                        cur = parent(cur);
+                    } else {
+                        break;
+                    }
                 }
             }
         }
@@ -37,7 +37,7 @@ public class MinHeap {
 
     public void update(int execute){
         BuildingInfo top = heap[1];
-        if(top.getE() >= 0) {
+        if(top != null) {
             top.setE(top.getE() + execute);
             top.point.setE(top.point.getE() + execute);
             minheapify(1);
@@ -86,7 +86,7 @@ public class MinHeap {
     }
 
     private boolean isLeaf(int pos){
-        return (heap[pos * 2] == null && heap[pos * 2+1] == null);
+        return (heap[leftsub(pos)] == null && heap[rightsub(pos)] == null);
     }
 
     private void swap(int first, int second){

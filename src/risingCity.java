@@ -1,4 +1,5 @@
 import java.io.*;
+
 public class risingCity {
     MinHeap minheap = new MinHeap();
     RBTree rbTree = new RBTree();
@@ -83,7 +84,6 @@ public class risingCity {
                     default:
                         break;
                 }
-
                 line = reader.readLine();
             }
 
@@ -93,8 +93,8 @@ public class risingCity {
                 globalCounter += 1;
                 if (mayUpdate.getE() + cumulativeincrement >= mayUpdate.getT()) {
                     res.append("(" + mayUpdate.getB() +"," +globalCounter+ ")" + "\n");
-                    interpretor.rbTree.delete(mayUpdate.point);
                     interpretor.minheap.pop();
+                    interpretor.rbTree.delete(mayUpdate.point);
                     cumulativeincrement = 0;
                 }
                 else if(cumulativeincrement >= 5){
