@@ -1,4 +1,3 @@
-
 public class MinHeap {
     private BuildingInfo[] heap = new BuildingInfo[2000];
     private int size = 0;
@@ -9,6 +8,9 @@ public class MinHeap {
         heap[0] = dummy;
     }
 
+    /** insert the element into MinHeap tree
+     * @param element
+     */
     public void insert(BuildingInfo element) {
         if (size >= maxsize) {
             System.out.println("full!");
@@ -18,6 +20,7 @@ public class MinHeap {
         size += 1;
         heap[size] = element;
         int cur = size;
+        /**recursively push newly inserted value into top if condition sufficed to keep MinHeap balance*/
         if(size > 1) {
             while (heap[cur].getE() <= heap[parent(cur)].getE()) {
                 if (heap[cur].getE() < heap[parent(cur)].getE()) {
@@ -35,15 +38,9 @@ public class MinHeap {
         }
     }
 
-    public void update(int execute){
-        BuildingInfo top = heap[1];
-        if(top != null) {
-            top.setE(top.getE() + execute);
-            top.point.setE(top.point.getE() + execute);
-            minheapify(1);
-        }
-    }
-
+    /**
+     * return the corresponding Min execution time buildinginfo and remove it.
+     */
     public BuildingInfo pop(){
         if(size > 1) {
             BuildingInfo poped = heap[1];
@@ -85,11 +82,17 @@ public class MinHeap {
         return 2 * pos + 1;
     }
 
+
     private boolean isLeaf(int pos){
         return (heap[leftsub(pos)] == null && heap[rightsub(pos)] == null);
     }
 
+    /** swap the position of selected two BuildingInfo unit.
+     * @param first , the index of first BuildingInfo
+     * @param second, the index of second BuildingInfo
+     */
     private void swap(int first, int second){
+        /**Save the pointers first*/
         RBNode pointtofirst = heap[first].point;
         RBNode pointtoSecond = heap[second].point;
 
@@ -97,7 +100,7 @@ public class MinHeap {
         tmp1.setB(heap[first].getB());
         tmp1.setE(heap[first].getE());
         tmp1.setT(heap[first].getT());
-        //reestablish pointers.
+        /**reestablish pointers*/
         tmp1.point = pointtofirst;
         pointtofirst.keystruct = tmp1;
 
@@ -105,18 +108,24 @@ public class MinHeap {
         tmp2.setB(heap[second].getB());
         tmp2.setE(heap[second].getE());
         tmp2.setT(heap[second].getT());
-        //reestablish pointers
+        /**reestablish pointers*/
         tmp2.point = pointtoSecond;
         pointtoSecond.keystruct = tmp2;
 
-        //finally switch these two nodes.
+        /**finally switch these two nodes.*/
         heap[first] = tmp2;
         heap[second] = tmp1;
     }
 
 
+    /** rebalance the tree by recursively pushing current selected node down if conditions sufficed.
+     * @param pos the index of the selected element which will be minheapified
+     */
     private void minheapify(int pos){
         if(!isLeaf(pos)){
+            /**
+            *  if both leaves exists, swap with the minimum child
+            * */
             if(heap[leftsub(pos)] != null && heap[rightsub(pos)] != null) {
                 if ((heap[pos].getE() > heap[leftsub(pos)].getE()) || (heap[pos].getE() > heap[rightsub(pos)].getE())) {
                     if (heap[leftsub(pos)].getE() < heap[rightsub(pos)].getE()) {
@@ -127,6 +136,9 @@ public class MinHeap {
                         minheapify(rightsub(pos));
                     }
                 } else {
+                    /**
+                     * if parent is greater or equal to both, need to check and swap with the child with minimum BuildingNumber,
+                    * */
                     if ((heap[pos].getE() == heap[leftsub(pos)].getE()) && (heap[pos].getE() == heap[rightsub(pos)].getE())) {
                             if (heap[leftsub(pos)].getB() < heap[rightsub(pos)].getB()) {
                                 swap(pos, leftsub(pos));
@@ -146,8 +158,13 @@ public class MinHeap {
                             minheapify(rightsub(pos));
                         }
                     }
+                    /**
+                     * Else, we do nothing
+                    * */
                 }
             }
+            /**if only a left child,
+            * */
             else if(heap[leftsub(pos)] != null){
                 if ((heap[pos].getE() > heap[leftsub(pos)].getE())){
                         swap(pos, leftsub(pos));
@@ -161,6 +178,8 @@ public class MinHeap {
                     }
                 }
             }
+            /**if only a right child,
+             * */
             else{
                 if ((heap[pos].getE() > heap[rightsub(pos)].getE())){
                     swap(pos, rightsub(pos));

@@ -1,4 +1,6 @@
 public class RBNode {
+    /**a pointer to the unit in MinHeap
+     * */
     BuildingInfo keystruct;
     int buildingnum;
     int exetime;
@@ -7,6 +9,12 @@ public class RBNode {
     RBNode left;
     RBNode right;
     RBNode parent;
+
+    /** initialize a basic unit that is managed and manipulated by a Red black tree,
+     * it connects to the BuildingInfo, a MinHeap unit, through
+     * pointer
+     * @param newone is the BuildingInfo Unit to connect to
+     */
     public RBNode(BuildingInfo newone){
         keystruct = newone;
         buildingnum = newone.getB();
@@ -43,7 +51,9 @@ public class RBNode {
         totaltime = newT;
     }
 
-    public RBNode getParentBroth(){
+    /**get the parallel sibling of parent node, if not exist return null
+     * */
+    public RBNode getUnc(){
         if(parent == null || parent.parent == null){
             return null;
         }
@@ -60,6 +70,8 @@ public class RBNode {
         return this == parent.left;
     }
 
+    /**get sibling of this node
+     * */
     public RBNode getSib(){
         if(parent == null){
             return null;
@@ -73,6 +85,10 @@ public class RBNode {
         }
     }
 
+    /** This will insert the new node called
+     * @param inserted to replace current RBNode object position in RBtree, a
+     * Further operation will push the current RBNode object down recursively.
+     */
     public void replaceWiththis(RBNode inserted){
         BuildingInfo keystruct = inserted.keystruct;
         if(parent != null){
@@ -87,6 +103,8 @@ public class RBNode {
         parent = inserted;
     }
 
+    /**Check whether there are any Red child below current RBNode
+     * */
     public boolean hasRedbelow(){
         return (left != null && left.isRed) || (right != null && right.isRed);
     }

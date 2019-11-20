@@ -1,19 +1,19 @@
 public class RBTree {
     private RBNode root;
-
-
     public RBTree(){
         root = null;
     }
     public RBNode getRoot(){
         return  root;
     }
+
+
+    /** insert a RBNode
+     * @param x
+     * into this Red Black tree, x should already be assigned a pointer to corresponding unit in MinHeap
+     */
     public void insert(RBNode x){
-        if(root == null){
-            x.isRed = false;
-            root = x;
-        }
-        else{
+        if(root != null){
             RBNode parent = root;
             while(parent != null){
                 if(x.getB() < parent.getB()){
@@ -46,8 +46,15 @@ public class RBTree {
             }
             balanceDoubleRedAt(x);
         }
+        else{
+            x.isRed = false;
+            root = x;
+        }
     }
 
+    /** a helper function which can handle the situation if Red black tree is empty
+     * @param b indicates the RBNode to delete. Usually get from the unit pointer from MinHeap to skip search step.
+     */
     public void delete(RBNode b){
         //System.out.println("node from point " + b.getB());
         if(root == null){
@@ -58,6 +65,11 @@ public class RBTree {
         deleteRBNode(todelete);
     }
 
+    /**search a corresponding unit with target BuildingNumber,
+     * @param cur  indicates the first node to begin the search, to use in recursive
+     * @param buildingNumber indicates the building number
+     * @return
+     */
     public RBNode search(RBNode cur, int buildingNumber){
         if(cur == null){
             return null;
@@ -75,6 +87,12 @@ public class RBTree {
         }
     }
 
+    /**similar with search, but doing a binary search traversal to output a range of existed building
+     *
+     * @param cur indicates the first node to begin the search, to use in recursive
+     * @param left Inclusive minimum Building number to include
+     * @param right Inclusive maximum Building number to include
+     * @return  is handle in String because this function to specifically designed to output a string including required BuildngInfo content*/
     public String searchBetween(RBNode cur,int left, int right){
         if(cur == null){
             return "";
@@ -96,15 +114,21 @@ public class RBTree {
         return content.toString();
     }
 
+    /** Rotate current node to a certain direction, if
+     * @param node  the node to rotate
+     * @param toLeft if true, rotate to left, if false rotate to right
+     * E.g, rotate X to left
+     *               X                                    b
+     *             /   \                                 /    \
+     *           a      b      ------> TO left         X        f
+     *         /  \    /  \                           /   \    / \
+     *       c     d   e   f                        a     e
+     */
     private void rotateto(RBNode node, boolean toLeft){
         RBNode newparent = null;
 
-        if(toLeft){
-            newparent = node.right;
-        }
-        else{
-            newparent = node.left;
-        }
+
+        newparent = toLeft ? node.right : node.left;
 
         if(root == node){
             root = newparent;
@@ -126,9 +150,18 @@ public class RBTree {
             newparent.right = node;
         }
     }
+
+    /** helper function, swap the position of two RBNOde with in the tree
+     * @param a   first RBNode
+     * @param b   second RBNode
+     */
     private void swapBuildingInfo(RBNode a, RBNode b){
+        /** Save the original pointers here
+         */
         BuildingInfo builda = a.keystruct;
         BuildingInfo buildb = b.keystruct;
+
+
         int tempbuildingnum = a.getB();
         int tempexe = a.getE();
         int temptotal = a.getT();
@@ -138,7 +171,9 @@ public class RBTree {
         b.setB(tempbuildingnum);
         b.setE(tempexe);
         b.setT(temptotal);
-        //You have to re assign the pointers otherwise, the pointer will not follow with the updated value
+        /**Reassign the saved pointers, otherwise,
+         * the pointer will not follow with the updated value.
+         * This is to ensure unit in MinHeap is connected to correct one in the red black tree*/
         builda.point = b;
         buildb.point = a;
         b.keystruct = builda;
@@ -151,15 +186,14 @@ public class RBTree {
         b.isRed = temp;
     }
 
+    /**
+     * @param dr
+     */
     private void balanceDoubleRedAt(RBNode dr){
-        if(root == dr){
-            dr.isRed = false;
-            return;
-        }
-        else{
+        if(root != dr){
             RBNode parent = dr.parent;
             RBNode parentsparent = parent.parent;
-            RBNode parentBroth = dr.getParentBroth();
+            RBNode parentBroth = dr.getUnc();
 
             if(parent.isRed){
                 if(parentBroth != null && parentBroth.isRed){
@@ -191,6 +225,10 @@ public class RBTree {
                     }
                 }
             }
+        }
+        else{
+            dr.isRed = false;
+            return;
         }
     }
 
