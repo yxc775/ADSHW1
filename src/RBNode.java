@@ -90,7 +90,6 @@ public class RBNode {
      * Further operation will push the current RBNode object down recursively.
      */
     public void replaceWiththis(RBNode inserted){
-        BuildingInfo keystruct = inserted.keystruct;
         if(parent != null){
             if(isLeftchild()){
                 parent.left = inserted;
