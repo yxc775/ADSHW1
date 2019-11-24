@@ -12,7 +12,7 @@ public class RBTree {
      * @param x
      * into this Red Black tree, x should already be assigned a pointer to corresponding unit in MinHeap
      */
-    public void insert(RBNode x){
+    public void insert(RBNode x) throws Exception{
         if(root != null){
             RBNode parent = root;
             while(parent != null){
@@ -25,8 +25,7 @@ public class RBTree {
                     }
                 }
                 else if(x.getB() == parent.getB()){
-                    System.out.println("Duplicate Building Number Encountered!");
-                    return;
+                    throw new ArrayIndexOutOfBoundsException("Duplicate Building Number Encountered!");
                 }
                 else{
                     if(parent.right == null){
@@ -186,7 +185,8 @@ public class RBTree {
         b.isRed = temp;
     }
 
-    /**
+    /**Do the corresponding LLr,LRr,RLr,RRr Color flipping
+     * or corresponding LLb, LRb, RLb, and RRb rotation/
      * @param dr
      */
     private void balanceDoubleRedAt(RBNode dr){
@@ -197,12 +197,16 @@ public class RBTree {
 
             if(parent.isRed){
                 if(parentBroth != null && parentBroth.isRed){
+                    /**Flip color and recursively balance two red conditions in topper layer.
+                     * */
                     parent.isRed = false;
                     parentBroth.isRed = false;
                     parentsparent.isRed = true;
                     balanceDoubleRedAt(parentsparent);
                 }
                 else{
+                    /**Handle LL or LR situations, flip color or rotate
+                     */
                     if(parent.isLeftchild()){
                         if(dr.isLeftchild()){
                             swapColor(parent,parentsparent);
@@ -213,6 +217,8 @@ public class RBTree {
                         }
                         rotateto(parentsparent,false);
                     }
+                    /**Handle RR or RL situations, flip color or rotate
+                     */
                     else{
                         if(dr.isLeftchild()){
                             rotateto(parent,false);
@@ -232,6 +238,9 @@ public class RBTree {
         }
     }
 
+    /**Seasing the left most nodes starting from
+     * @param item, which is the starting node to search
+     * @return this node*/
     private RBNode leftbranchingUntilNoChild(RBNode item){
         RBNode temp = item;
         while(temp.left != null){
@@ -240,6 +249,11 @@ public class RBTree {
         return temp;
     }
 
+
+    /** This will get a node below this
+     * @param toDelete  node to replace this position after deletion.
+     * @return the new node.
+     */
     private RBNode getFillInAfterDelete(RBNode toDelete){
         if(toDelete.left != null && toDelete.right != null) {
             return leftbranchingUntilNoChild(toDelete.right);
@@ -256,7 +270,10 @@ public class RBTree {
     }
 
 
-
+    /** Given the node pointer
+     * @param toDelete , which is the node to delete, delete it and replace it with a suitable node
+     * and perform balancing depend on situations.
+     */
     private void deleteRBNode(RBNode toDelete){
         RBNode replaceWith = getFillInAfterDelete(toDelete);
         RBNode curparent = toDelete.parent;
@@ -279,6 +296,10 @@ public class RBTree {
         }
         else if(toDelete.left == null || toDelete.right == null) {
             if (root == toDelete) {
+                /**If it only has one child, we are sure that the child node cannot be black node.
+                 * Thus we can simply swith these two, and delete the child.
+                 * Also keep updating the pointers connecting to the MinHeap
+                 * */
                 BuildingInfo replpoint = replaceWith.keystruct;
                 toDelete.setB(replaceWith.getB());
                 toDelete.setE(replaceWith.getE());
@@ -309,6 +330,11 @@ public class RBTree {
         }
     }
 
+
+    /**Do the corresponding Rb0,Rb1,Rb2, or Rr0, Rr1, and Rr2.
+     * Recursively balance it depend on the situations.
+     * @param db is the node which firstly causing the double black inbalance right after operation.
+     */
     private void balanceDoubleBlackAt(RBNode db){
         if(root != db){
             RBNode sib = db.getSib();
@@ -317,6 +343,8 @@ public class RBTree {
                 balanceDoubleBlackAt(parent);
             }
             else{
+                /**If sibiling is red, rotate and rebalance again. Rr(n) case.
+                 */
                 if(sib.isRed){
                     parent.isRed = true;
                     sib.isRed = false;
@@ -329,7 +357,12 @@ public class RBTree {
                     balanceDoubleBlackAt(db);
                 }
                 else{
+                    /** if sibiling does not have red childrien, we are good and keep balancing it from parent node
+                     *  Else, we may have Rb(n) condition
+                     */
                     if(sib.hasRedbelow()){
+                        /**Need balance here if have red child between sibiling.
+                         * */
                         if(sib.left != null && sib.left.isRed){
                             if(sib.isLeftchild()){
                                 sib.left.isRed = sib.isRed;
@@ -357,6 +390,8 @@ public class RBTree {
                         parent.isRed = false;
                     }
                     else{
+                        /**Flip color and handle inbalance in the top layer
+                         * */
                         sib.isRed = true;
                         if(!parent.isRed){
                             balanceDoubleBlackAt(parent);
